@@ -22,6 +22,9 @@ if (!isset($_SESSION['adminLoggedIn'])) {
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
 
@@ -144,12 +147,6 @@ if (!isset($_SESSION['adminLoggedIn'])) {
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
-
-            <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
-
 
         </ul>
 
@@ -431,7 +428,7 @@ if (!isset($_SESSION['adminLoggedIn'])) {
                             <h6 class="m-0 font-weight-bold text-primary-1" style="font-size: 25px;padding-left: 510px;color: #f54744;">Monthly Servives Details</h6>
                         </div>
 
-                        <div class="card-body">
+                        <div class="card-body" id="allTablesDetails">
 
                             <style>
                                 /* Table Styling */
@@ -528,7 +525,7 @@ if (!isset($_SESSION['adminLoggedIn'])) {
                                                 echo '<td>' . $row['customer_address'] . '</td>';
                                                 echo '<td>' . $row['customer_gender'] . '</td>';
                                                 echo '<td>' . $row['customer_dob'] . '</td>';
-                                                echo "<td style='text-align: center;'><button style='background: transparent; color: #858796; border: 0px;' onclick='deleteCustomer($id)'>Delete</button></td>";
+                                                echo "<td style='text-align: center;'><button style='background: transparent; color: #858796; border: 0px;' onclick='deleteCustomer($id)'><i class='fa fa-trash-o' style='color:#4e73df;'></i></button></td>";
                                                 echo '</tr>';
                                             }
                                         ?>
@@ -661,7 +658,7 @@ if (!isset($_SESSION['adminLoggedIn'])) {
                                             echo '<td>' . $row['worker_address'] . '</td>';
                                             echo '<td>' . $row['worker_gender'] . '</td>';
                                             echo '<td>' . $row['worker_dob'] . '</td>';
-                                            echo "<td style='text-align: center;'><button onclick='deleteWorker($worker_id)' class='delete-btn'>Delete</button></td>";
+                                            echo "<td style='text-align: center;'><button onclick='deleteWorker($worker_id)' class='delete-btn'><i class='fa fa-trash-o' style='color:#1cc88a;'></i></button></td>";
                                             echo '</tr>';
                                         }
                                         echo '</table>';
@@ -874,6 +871,7 @@ if (!isset($_SESSION['adminLoggedIn'])) {
                                         },
                                         success: function(response) {
                                             $('#requestedWorkersDetails').html($(response).find('#requestedWorkersDetails').html());
+                                            $('#worker #total_booking_requests').load('index.php #worker #total_booking_requests');
                                         }
                                     });
                                 }
@@ -955,7 +953,7 @@ if (!isset($_SESSION['adminLoggedIn'])) {
                                             echo '<td>' . $row["service_name"] . '</td>';
                                             echo '<td>' . $row['description'] . '</td>';
                                             echo '<td>' . $row['services_image'] . '</td>';
-                                            echo "<td style='text-align: center;'><button style='background: transparent; border: 0px; color: #858796;' onclick='deleteWorker($service_id)'>Delete</button></td>";
+                                            echo "<td style='text-align: center;'><button style='background: transparent; border: 0px; color: #858796;' onclick='deleteServices($service_id, $page)'><i class='fa fa-trash-o' style='color:#36b9cc;'></i></button></td>";
 
                                             $sub_service_sql = "SELECT * FROM sub_service WHERE service_id = $service_id";
                                             $sub_service = $conn->query($sub_service_sql);
@@ -988,7 +986,7 @@ if (!isset($_SESSION['adminLoggedIn'])) {
                                         ?>
 
                                         <!-- Pagination -->
-                                        <div style="text-align: right; width: 1064px; margin-left: 65px;">
+                                        <div style="text-align: right; width: 1064px; margin-left: 65px;" id="servicesDetailsPages">
                                             <button id="backBtn" style="margin-top: 20px;" onclick="loadServicePage(<?php echo $page - 1; ?>)" <?php echo ($page <= 1 ? 'disabled' : ''); ?>>Back</button>
 
                                             <?php
@@ -1021,11 +1019,8 @@ if (!isset($_SESSION['adminLoggedIn'])) {
                                                 <input type="text" name="serviceName" id="serviceName" required style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px;"><br>
                                                 <label style="display: block; margin-bottom: 5px;">Description</label>
                                                 <input type="text" name="servicesDescription" id="description" required style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px;"><br>
-                                                <!-- <label style="display: block; margin-bottom: 5px;">Price</label>
-                                                <input type="text" name="servicePrice" id="price" onkeypress="return /[0-9]/i.test(event.key)" required style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px;"><br> -->
                                                 <label style="display: block; margin-bottom: 5px;">Services Images Path</label>
                                                 <input type="file" name="servicesImagesPath" id="path" required style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px;"><br>
-                                                <!-- <label for="addSubServices">Add Sub-Services:</label> -->
                                                 <input type="checkbox" id="addSubServices" onclick="toggleSubServiceFields()"> Add Sub-Services<br><br>
 
                                                 <div id="subServicesContainer" style="display: none;">
@@ -1059,6 +1054,8 @@ if (!isset($_SESSION['adminLoggedIn'])) {
                                         }
 
                                         function insertServices() {
+                                            var lastpage = <?php echo $totalPages; ?>;
+
                                             // Retrieve single values
                                             var name = document.getElementById("serviceName").value;
                                             var description = document.getElementById("description").value;
@@ -1092,9 +1089,9 @@ if (!isset($_SESSION['adminLoggedIn'])) {
                                                 processData: false, // Prevent jQuery from automatically transforming the data into a query string
                                                 contentType: false, // Prevent jQuery from setting the content type header
                                                 success: function(response) {
-                                                    $('#serivceDetails table').load('index.php #serivceDetails table');
                                                     $('#services #totalNumServices').load('index.php #services #totalNumServices');
-                                                    $("#serviceFormPopup").hide();
+                                                    $('#serviceFormPopup #serviceForm').load('index.php #serviceFormPopup #serviceForm');
+                                                    loadServicePage(lastpage);
                                                 },
                                                 error: function(xhr, status, error) {
                                                     console.error("Error:", error); // Handle errors
@@ -1133,7 +1130,7 @@ if (!isset($_SESSION['adminLoggedIn'])) {
                                     </div>
 
                                     <script>
-                                        function deleteWorker(service_id) {
+                                        function deleteServices(service_id, currentPage) {
                                             $.ajax({
                                                 url: 'deleteData.php',
                                                 method: 'GET',
@@ -1141,11 +1138,16 @@ if (!isset($_SESSION['adminLoggedIn'])) {
                                                     service_id: service_id
                                                 },
                                                 success: function(response) {
-                                                    $('#serivceDetails table').load('index.php #serivceDetails table');
+                                                    // Reload the current page after deletion
+                                                    loadServicePage(currentPage);
                                                     $('#services #totalNumServices').load('index.php #services #totalNumServices');
+                                                },
+                                                error: function(xhr, status, error) {
+                                                    console.error("Error:", error);
                                                 }
                                             });
                                         }
+
 
                                         function loadServicePage(page) {
                                             $.ajax({
@@ -1157,17 +1159,9 @@ if (!isset($_SESSION['adminLoggedIn'])) {
                                                 success: function(response) {
                                                     $('#serivceDetail').html($(response).find('#serivceDetail').html());
                                                     $('#services #totalNumServices').load('index.php #services #totalNumServices');
-                                                    $('#serivceDetails serivceDetailTable').load('index.php #serivceDetails serivceDetailTable');
-
                                                 }
                                             });
                                         }
-
-                                        // Auto-refresh the page every 1 second
-                                        // setInterval(function() {
-                                        //     $('#serivceDetails table').load('index.php #serivceDetails table');
-                                        //     $('#services #totalNumServices').load('index.php #services #totalNumServices');
-                                        // }, 1000); // 1000 milliseconds = 1 second
                                     </script>
 
                                     <style>
@@ -1282,6 +1276,36 @@ if (!isset($_SESSION['adminLoggedIn'])) {
                                         $stmt->close();
                                         $conn->close();
                                     }
+
+                                    // include 'connection.php';
+
+                                    // if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                                    //     $serviceName = $_POST['serviceName'];
+                                    //     $servicesDescription = $_POST['servicesDescription'];
+
+                                    //     $servicePrice = $_POST['servicePrice'];
+                                    //     $servicesImagesPath = $_FILES['servicesImagesPath']['name'];
+
+                                    //     // Handle file upload
+                                    //     $target_dir = "ServiceImage/";
+
+                                    //     $target_file = $target_dir . basename($servicesImagesPath);
+
+                                    //     if (move_uploaded_file($_FILES["servicesImagesPath"]["tmp_name"], $target_file)) {
+
+                                    //         $stmt = $conn->prepare("INSERT INTO service (service_name, description, service_price, services_image, status) VALUES (?, ?, ?, ?, 'active')");
+                                    //         $stmt->bind_param("ssis", $serviceName, $servicesDescription, $servicePrice, $target_file);
+
+                                    //         if ($stmt->execute()) {
+                                    //             echo "Service added successfully.";
+                                    //         } else {
+                                    //             echo "Error: " . $stmt->error;
+                                    //         }
+
+                                    //         $stmt->close();
+                                    //         $conn->close();
+                                    //     }
+                                    // }
                                     ?>
                             </div>
 
@@ -1563,7 +1587,7 @@ if (!isset($_SESSION['adminLoggedIn'])) {
                                 // include "Chart/PieChart/pieChart.php"; 
 
 
-                                 include "Chart/DonutPieChart/donutPieChart.php"; 
+                                include "Chart/DonutPieChart/donutPieChart.php";
                                 ?>
                             </div>
 
@@ -1594,8 +1618,8 @@ if (!isset($_SESSION['adminLoggedIn'])) {
                         </div>
                         <div class="card-body" style="padding-top: 10px;">
                             <div class="chart-area">
-                                <?php 
-                                include "Chart/PieChart/pieChart.php"; 
+                                <?php
+                                include "Chart/PieChart/pieChart.php";
 
                                 // include "Chart/DonutPieChart/donutPieChart.php"; 
 

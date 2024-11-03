@@ -308,6 +308,7 @@ $(document).ready(function(){
         $("#MISHeader").hide();
         $("#requestWorkersHeader").hide();
         $("#requestedWorkersDetails").hide();
-        // $(".card-body").hide();
+        $("#allTablesDetails").hide();
+        $("#display").hide();        
     });
 });
