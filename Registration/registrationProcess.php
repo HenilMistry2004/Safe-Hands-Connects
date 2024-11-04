@@ -4,11 +4,13 @@ session_start();
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>Registration</title>
     <script src="ajax/headerLink.js"></script>
 </head>
+
 <body>
     <?php
     $_SESSION['customerRegistrationMessage'] = 0;
@@ -76,10 +78,11 @@ session_start();
         $year = $_POST['year'];
         $address = $_POST['address'];
         $pass = $_POST['password'];
-        
+        $sub_services = $_POST['sub_services'];
+
         $latitude = $_POST['latitude']; // Retrieve latitude
         $longitude = $_POST['longitude']; // Retrieve longitude
-        $city = $_POST['city']; // Retrieve longitude
+        $city = $_POST['city']; // Retrieve city
 
         $twoFactor = isset($_POST['twoFacter']) ? 1 : 0; // Assumes checkbox or similar
         $date = $year . "-" . sprintf("%02d", $month) . "-" . sprintf("%02d", $day);
@@ -99,8 +102,8 @@ session_start();
                 echo "Error: Email already exists. Please use a different email.";
             } else {
                 // Prepare and execute insert statement
-                $stmt = $conn->prepare("INSERT INTO worker (worker_name, worker_password, worker_email_id, worker_contact, worker_address, worker_gender, worker_dob, service_id, isTwoFactorEnable,latitude,longitude,city) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?)");
-                $stmt->bind_param("sssssssissss", $name, $encryptedPassword, $email, $contact, $address, $gender, $date, $services_id, $twoFactor,$latitude,$longitude,$city);
+                $stmt = $conn->prepare("INSERT INTO worker (worker_name, worker_password, worker_email_id, worker_contact, worker_address, worker_gender, worker_dob, service_id, isTwoFactorEnable, sub_service_id, latitude, longitude, city) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                $stmt->bind_param("sssssssisssss", $name, $encryptedPassword, $email, $contact, $address, $gender, $date, $services_id, $twoFactor, $sub_services, $latitude, $longitude, $city);
 
                 if ($stmt->execute()) {
                     $_SESSION['registerMessage']++;
@@ -118,4 +121,5 @@ session_start();
     }
     ?>
 </body>
+
 </html>
