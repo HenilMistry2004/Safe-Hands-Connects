@@ -1439,7 +1439,6 @@ if (!isset($_SESSION['adminLoggedIn'])) {
                             </div>
 
                             <div class=" workerDeleteData">
-
                                 <script>
                                     function workerDeletedData() {
                                         $.ajax({

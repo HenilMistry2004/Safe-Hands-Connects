@@ -18,12 +18,83 @@ include("../connection/connection.php");
     <link rel="stylesheet" href="../assets/css/animated.css">
     <link rel="stylesheet" href="../assets/css/owl.css">
     <link rel="stylesheet" href="login.css">
+
+    <style>
+        /* Basic card styling */
+        .card {
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Image styling */
+        .card-img-top {
+            object-fit: cover;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            width: 100%;
+        }
+
+        /* Card title styling */
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Card text styling */
+        .card-text {
+            font-size: 1rem;
+            color: #666;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+
+        /* Button styling */
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            padding: 10px 20px;
+            border-radius: 4px;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        /* Card spacing */
+        .mb-4 {
+            margin-bottom: 24px !important;
+        }
+
+        /* Responsive height adjustments */
+        @media (max-width: 992px) {
+            .card {
+                height: auto;
+            }
+        }
+    </style>
 </head>
 
 <body>
     <?php include '../Header_Footer/header.php'; ?>
 
-    <div id="contact" class="contact-us section" style="margin-top: 100px;padding-top: 60px;padding-bottom: 110px;">
+    <div id="contact" class="contact-us section">
         <div class="container">
             <div class="row">
                 <!-- Left empty space -->
@@ -54,7 +125,7 @@ include("../connection/connection.php");
                                                 <input type="hidden" name="service_id" value="<?php echo $row['service_id']; ?>">
                                                 <input type="submit" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" value="Book Now">
 
-                                                
+
                                             </form>
                                         </div>
                                     </div>

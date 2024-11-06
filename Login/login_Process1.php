@@ -81,38 +81,31 @@ $_SESSION['inactiveCustomer'] = 0;
         $checkRequest = $stmtReq->get_result();
 
         if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === false) {
-            if($checkIACustomer->num_rows>0){
+            if ($checkIACustomer->num_rows > 0) {
                 $_SESSION['inactiveCustomer'] = 1;
             }
-            if($checkIAEmployee-> num_rows>0){
+            if ($checkIAEmployee->num_rows > 0) {
                 $_SESSION['inactiveEmployee'] = 1;
             }
             // Handle different user types
             if ($checkCustomer->num_rows > 0) {
                 $row = $checkCustomer->fetch_assoc();
-                $_SESSION['cName'] = $row['customer_name'];
-                $_SESSION['cEmail_ID'] = $row['customer_email_id'];
-                $_SESSION['userId'] = $row['customer_id'];
-                $_SESSION['customer_id'] = $row['customer_id'];
-                $_SESSION['userPassword'] = $row['customer_password'];
-                $_SESSION['userContactNumber'] = $row['customer_contact_no'];
-                $_SESSION['userAddress'] = $row['customer_address'];
-                $_SESSION['userGender'] = $row['customer_gender'];
-                $_SESSION['userDOB'] = $row['customer_dob'];
-                $_SESSION['loginMessage']++;
                 $_SESSION['twoFactor'] = $row['isTwoFactorEnable'];
-                $_SESSION['user'] = "customer";
 
                 if ($_SESSION['twoFactor'] == 1) {
                     $_SESSION['otp'] = rand(1000, 9999); // Generate a 4-digit OTP
                     $_SESSION['otp_expiry'] = time() + 300; // OTP valid for 5 minutes
+
+                    $_SESSION['twoFacterEmail'] = $email;
+                    $_SESSION['twoFacterPassword'] = $encPass;
+                    $_SESSION['user'] = "customer";
 
                     $otp = $_SESSION['otp'];
                     $email = $_SESSION['cEmail_ID'];
                     require '../SMTP/MailClass.php';
                     $_SESSION['successfullyAuthenticated'] = false;
                     $_SESSION['OTP'] = $otp;
-                    $message_for_customer ="<html>
+                    $message_for_customer = "<html>
                                                 <head>
                                                     <style>
                                                         body {
@@ -187,21 +180,34 @@ $_SESSION['inactiveCustomer'] = 0;
                                             </html>";
                     sendEmail($email, '', 'Safe Hands Connect', $message_for_customer);
 
+
+
+
                     header('Location: ../Two_Factor_Authentication/two_Factor.php');
                     exit;
                 } else {
+
+                    $_SESSION['cName'] = $row['customer_name'];
+                    $_SESSION['cEmail_ID'] = $row['customer_email_id'];
+                    $_SESSION['userId'] = $row['customer_id'];
+                    $_SESSION['customer_id'] = $row['customer_id'];
+                    $_SESSION['userPassword'] = $row['customer_password'];
+                    $_SESSION['userContactNumber'] = $row['customer_contact_no'];
+                    $_SESSION['userAddress'] = $row['customer_address'];
+                    $_SESSION['userGender'] = $row['customer_gender'];
+                    $_SESSION['userDOB'] = $row['customer_dob'];
+                    $_SESSION['loginMessage']++;
+                    $_SESSION['user'] = "customer";
+
                     $_SESSION['loggedin'] = true;
                     header('Location: ../Index/index.php');
                     exit;
                 }
             } else if ($checkEmployee->num_rows > 0) {
                 $row1 = $checkEmployee->fetch_assoc();
-                $_SESSION['eName'] = $row1['worker_name'];
-                $_SESSION['eEmail_ID'] = $row1['worker_email_id'];
-                $_SESSION['loggedin'] = true;
-                $_SESSION['empId'] = $row1['worker_id'];
+                
                 $_SESSION['twoFactor'] = $row1['isTwoFactorEnable'];
-                $_SESSION['loginMessage']++;
+                
                 $_SESSION['user'] = "worker";
                 if ($_SESSION['twoFactor'] == 1) {
                     $_SESSION['otp'] = rand(1000, 9999); // Generate a 4-digit OTP
@@ -209,7 +215,9 @@ $_SESSION['inactiveCustomer'] = 0;
 
                     $otp = $_SESSION['otp'];
                     $email = $_SESSION['eEmail_ID'];
-                    
+                    $_SESSION['twoFacterWorkerEmail'] = $email;
+                    $_SESSION['loggtwoFacterWorkerPassword'] = $encPass;
+
                     $_SESSION['loggedin'] = true;
                     $_SESSION['successfullyAuthenticated'] = false;
 
@@ -294,6 +302,11 @@ $_SESSION['inactiveCustomer'] = 0;
                     exit;
                 } else {
                     $_SESSION['loggedin'] = true;
+                    $_SESSION['eName'] = $row1['worker_name'];
+                    $_SESSION['eEmail_ID'] = $row1['worker_email_id'];
+                    $_SESSION['loggedin'] = true;
+                    $_SESSION['empId'] = $row1['worker_id'];
+                    $_SESSION['loginMessage']++;
                     header('Location: ../Index/index.php');
                     // header('Location: login.php');
                     exit;
@@ -315,13 +328,12 @@ $_SESSION['inactiveCustomer'] = 0;
                 header('Location: login.php');
                 exit;
             }
-        }else{
+        } else {
             header('Location: login.php');
         }
     } catch (Exception $e) {
         echo "Error: " . $e->getMessage();
     } finally {
-
     }
     ?>
 </body>
