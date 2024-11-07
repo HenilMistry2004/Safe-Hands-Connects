@@ -2,6 +2,8 @@
 session_start();
 $_SESSION['unmatchOPT'] = 0;
 
+include '../connection/connection.php';
+
 if (isset($_SESSION['otp']) && isset($_SESSION['otp_expiry'])) {
     $otpSent = $_SESSION['otp'];
     $user_input_otp = $_POST['otp']; // OTP entered by the user
