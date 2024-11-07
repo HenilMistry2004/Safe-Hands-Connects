@@ -101,7 +101,7 @@ $_SESSION['inactiveCustomer'] = 0;
                     $_SESSION['user'] = "customer";
 
                     $otp = $_SESSION['otp'];
-                    $email = $_SESSION['cEmail_ID'];
+                    $email = $_SESSION['twoFacterEmail'];
                     require '../SMTP/MailClass.php';
                     $_SESSION['successfullyAuthenticated'] = false;
                     $_SESSION['OTP'] = $otp;
@@ -178,12 +178,14 @@ $_SESSION['inactiveCustomer'] = 0;
                                                     </div>
                                                 </body>
                                             </html>";
-                    sendEmail($email, '', 'Safe Hands Connect', $message_for_customer);
-
-
-
-
-                    header('Location: ../Two_Factor_Authentication/two_Factor.php');
+                    if(sendEmail($email, '', 'Safe Hands Connect', $message_for_customer)){
+                        header('Location: ../Two_Factor_Authentication/two_Factor.php');
+                        exit;
+                    } else {
+                        echo "Failed to send OTP email. Please try again.";
+                        exit;
+                    }
+                    // header('Location: ../Two_Factor_Authentication/two_Factor.php');
                     exit;
                 } else {
 
@@ -210,15 +212,16 @@ $_SESSION['inactiveCustomer'] = 0;
                 
                 $_SESSION['user'] = "worker";
                 if ($_SESSION['twoFactor'] == 1) {
+                    $_SESSION['twoFacterWorkerEmail'] = $email;
+                    $_SESSION['loggtwoFacterWorkerPassword'] = $encPass;
+                    
                     $_SESSION['otp'] = rand(1000, 9999); // Generate a 4-digit OTP
                     $_SESSION['otp_expiry'] = time() + 300; // OTP valid for 5 minutes
 
                     $otp = $_SESSION['otp'];
-                    $email = $_SESSION['eEmail_ID'];
-                    $_SESSION['twoFacterWorkerEmail'] = $email;
-                    $_SESSION['loggtwoFacterWorkerPassword'] = $encPass;
+                    $email = $_SESSION['twoFacterWorkerEmail'];
 
-                    $_SESSION['loggedin'] = true;
+                    $_SESSION['loggedin'] = false;
                     $_SESSION['successfullyAuthenticated'] = false;
 
                     require '../SMTP/MailClass.php';
