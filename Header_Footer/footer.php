@@ -93,7 +93,7 @@ error_reporting(0);
                         <div class="row">
                             <div class="col-lg-12">
                                 <fieldset>
-                                    <input type="text" name="name" id="name" placeholder="Name" value= <?php echo $_SESSION['cName']; ?> autocomplete="on" required>
+                                    <input type="text" name="name" id="name" placeholder="Name" value= <?php echo $_SESSION['cName']; ?> required>
                                 </fieldset>
                             </div>
                             <div class="col-lg-12">
