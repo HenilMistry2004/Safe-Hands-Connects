@@ -54,11 +54,11 @@ if (isset($_SESSION['otp']) && isset($_SESSION['otp_expiry'])) {
             }
         } elseif ($_SESSION['user'] == "worker") {
             // Ensure two-factor email and password are set for worker
-            if (isset($_SESSION['twoFacterWorkerEmail'], $_SESSION['twoFacterWorkerPassword'])) {
+            if (isset($_SESSION['twoFacterWorkerEmail'], $_SESSION['loggtwoFacterWorkerPassword'])) {
                 // Employee query
                 $empQuery = "SELECT * FROM worker WHERE worker_email_id = ? AND worker_password = ? AND status = 'active'";
                 $stmtEmp = $conn->prepare($empQuery);
-                $stmtEmp->bind_param("ss", $_SESSION['twoFacterWorkerEmail'], $_SESSION['twoFacterWorkerPassword']);
+                $stmtEmp->bind_param("ss", $_SESSION['twoFacterWorkerEmail'], $_SESSION['loggtwoFacterWorkerPassword']);
                 $stmtEmp->execute();
                 $checkEmployee = $stmtEmp->get_result();
 

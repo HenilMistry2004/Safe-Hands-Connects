@@ -15,7 +15,7 @@ function sendEmail($recipientEmail, $name, $subject, $body) {
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
         $mail->Username   = 'safehandsconnect13@gmail.com'; // Your email address
-        $mail->Password   = 'cwsw jwjf clxm qccm';       // Your email password
+        $mail->Password   = 'mdyp ljbx pvlw aknw';       // Your email password
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail->Port       = 465;
 
