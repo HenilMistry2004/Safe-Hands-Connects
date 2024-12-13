@@ -2,6 +2,7 @@ $(document).ready(function(){
     $("#customer").click(function(){
       $("#customerDetails").show();
       $("#costomerHeader").show();
+      $("#allTablesDetails").show();
       $("#display").show();
     });
 
@@ -33,6 +34,7 @@ $(document).ready(function(){
     $("#worker").click(function(){
         $("#workerHeader").show();
         $("#workersDetails").show();
+        $("#allTablesDetails").show();
         $("#display").show();
     });
 
@@ -64,6 +66,7 @@ $(document).ready(function(){
     $("#services").click(function(){
         $("#serviceHeader").show();
         $("#serivceDetail").show();
+        $("#allTablesDetails").show();
         $("#display").show();
     });
 
@@ -95,6 +98,7 @@ $(document).ready(function(){
     
     $("#pendingRequests").click(function(){
         $("#bookingRequestHeader").show();
+        $("#allTablesDetails").show();
         $("#requestDetails").show();
         $("#display").show();
     });
@@ -133,6 +137,7 @@ $(document).ready(function(){
     $("#deleteCustomer").click(function(){
         $("#deletedCostomerHeader").show();
         $("#display").show();
+        $("#allTablesDetails").show();
         $(".customerDeletedData").show();
     });
 
@@ -161,6 +166,7 @@ $(document).ready(function(){
 
     $("#deleteWorker").click(function(){
         $("#deletedWorkerHeader").show();
+        $("#allTablesDetails").show();
         $("#display").show();
         $(".workerDeleteData").show();
     });
@@ -194,6 +200,7 @@ $(document).ready(function(){
         $("#tpsReport").show();
         $("#tpsTableReporte").show();
         $("#TPSHrader").show();
+        $("#allTablesDetails").show();
         $("#display").show();
     });
 
@@ -226,6 +233,7 @@ $(document).ready(function(){
         $("#misTableReporte").show();
         $("#MISHeader").show();
         $("#display").show();
+        $("#allTablesDetails").show();
     });
 
     $("#mis").click(function(){
@@ -256,6 +264,7 @@ $(document).ready(function(){
         $("#requestWorkersHeader").show();
         $("#requestedWorkersDetails").show();
         $("#display").show();
+        $("#allTablesDetails").show();
     });
 
     $("#requestedWorkers").click(function(){

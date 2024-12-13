@@ -9,7 +9,7 @@
         $servername = "localhost";
         $username = "root";
         $password = "";
-        $db = "safehandsconnect";
+        $db = "safehandsconnect1111";
         $conn = new mysqli($servername, $username, $password, $db);
 
         if ($conn->connect_error) {

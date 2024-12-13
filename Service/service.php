@@ -116,7 +116,7 @@ include("../connection/connection.php");
                                 <div class="col-lg-3 col-md-6 col-sm-12">
                                     <div class="card mb-4" style="height: 410px;">
                                         <div>
-                                            <img src="<?php echo $row['services_image']; ?>" alt="<?php echo $row['service_name']; ?>" height="200px" class="card-img-top">
+                                        <img src="../deshboard/<?php echo $row['services_image']; ?>" alt="<?php echo $row['service_name']; ?>" height="200px" class="card-img-top">
                                         </div>
                                         <div class="card-body">
                                             <h2 class="card-title"><?php echo $row['service_name']; ?></h2>

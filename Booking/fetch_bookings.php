@@ -3,19 +3,33 @@ session_start();
 include("../connection/connection.php");
 error_reporting(0);
 
-// Get customer_id from POST data
+// Get customer_id and status from POST data
 $customer_id = $_POST['customer_id'];
 $status = $_POST['status'];
+$page = isset($_POST['page']) && is_numeric($_POST['page']) ? (int)$_POST['page'] : 1;
 
 // Validate customer_id
 if ($customer_id <= 0) {
     die("Invalid customer ID.");
 }
 
-// Prepare the query based on status
-$query = "SELECT * FROM booking WHERE customer_Id = ? AND order_status = ?";
+$recordsPerPage = 10;
+$offset = ($page - 1) * $recordsPerPage;
+
+// Prepare the query to count total records
+$countQuery = "SELECT COUNT(*) AS total FROM booking WHERE customer_Id = ? AND order_status = ?";
+$countStmt = $conn->prepare($countQuery);
+$countStmt->bind_param("is", $customer_id, $status);
+$countStmt->execute();
+$countResult = $countStmt->get_result();
+$totalRecords = $countResult->fetch_assoc()['total'];
+
+$totalPages = ceil($totalRecords / $recordsPerPage);
+
+// Prepare the query to fetch records with LIMIT and OFFSET
+$query = "SELECT * FROM booking WHERE customer_Id = ? AND order_status = ? LIMIT ? OFFSET ?";
 $stmt = $conn->prepare($query);
-$stmt->bind_param("is", $customer_id, $status);
+$stmt->bind_param("isii", $customer_id, $status, $recordsPerPage, $offset);
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -76,7 +90,34 @@ if ($result->num_rows > 0) {
     }
 
     echo '</tbody></table>';
+
+    // Pagination controls
+    echo '<nav aria-label="Page navigation">
+            <ul class="pagination">';
+
+    if ($page > 1) {
+        echo '<li class="page-item">
+                <button class="page-link" onclick="fetchPage(' . ($page - 1) . ')">Previous</button>
+              </li>';
+    }
+
+    for ($i = 1; $i <= $totalPages; $i++) {
+        $activeClass = $i === $page ? 'active' : '';
+        echo '<li class="page-item ' . $activeClass . '">
+                <button class="page-link" onclick="fetchPage(' . $i . ')">' . $i . '</button>
+              </li>';
+    }
+
+    if ($page < $totalPages) {
+        echo '<li class="page-item">
+                <button class="page-link" onclick="fetchPage(' . ($page + 1) . ')">Next</button>
+              </li>';
+    }
+
+    echo '</ul>
+          </nav>';
 } else {
     echo '<p>You have no ' . strtolower($status) . ' bookings at the moment.</p>';
 }
+
 ?>

@@ -1,15 +1,19 @@
 <?php
 include 'connection.php';
 
+$limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 10;
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$offset = ($page - 1) * $limit;
+
 try {
-    $sql = "select * from customer where status = 'Inactive';";
+    $sql = "SELECT * FROM customer WHERE status = 'Inactive' LIMIT $limit OFFSET $offset";
     $select = $conn->query($sql);
 
     if ($select) {
         if ($select->num_rows > 0) {
 ?>
             <table style="margin-left: 70px;">
-                <tr style=" background-color: #f54744">
+                <tr style="background-color: #4e73df">
                     <th> Id</th>
                     <th> Name</th>
                     <th> Email</th>
@@ -21,7 +25,6 @@ try {
 
                 <?php
                 while ($row = $select->fetch_assoc()) {
-                    $id = $row["customer_id"];
                     echo '<tr>';
                     echo '<td>' . $row["customer_id"] . '</td>';
                     echo '<td>' . $row["customer_name"] . '</td>';
@@ -34,10 +37,27 @@ try {
                 }
                 ?>
             </table>
-
 <?php
-        }else{
-            echo("No data is deleted.");
+            // Pagination controls
+            $countQuery = "SELECT COUNT(*) AS total FROM customer WHERE status = 'Inactive'";
+            $countResult = $conn->query($countQuery);
+            $total = $countResult->fetch_assoc()['total'];
+            $totalPages = ceil($total / $limit);
+
+            echo '<div class="pagination" style="margin-top: 20px;">';
+            if ($page > 1) {
+                echo "<button class='page-link' data-page='" . ($page - 1) . "'>Previous</button>";
+            }
+            for ($i = 1; $i <= $totalPages; $i++) {
+                $activeClass = $i == $page ? "style='font-weight:bold;'" : "";
+                echo "<button class='page-link' data-page='$i' $activeClass>$i</button>";
+            }
+            if ($page < $totalPages) {
+                echo "<button class='page-link' data-page='" . ($page + 1) . "'>Next</button>";
+            }
+            echo '</div>';
+        } else {
+            echo "No data is deleted.";
         }
     } else {
         throw new Exception("Query execution failed");

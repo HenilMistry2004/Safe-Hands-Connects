@@ -9,7 +9,6 @@
 
 <body>
     <?php
-
     include "Connection.php";
 
     // Check if POST data is set
@@ -25,8 +24,23 @@
         $servicePrice = $_POST['servicePrice'];
     }
 
-    if (isset($_POST['servicesImagesPath'])) {
-        $servicesImagesPath = $_POST['servicesImagesPath'];
+    // Handle file upload
+    $uploadDir = "uploads/"; // Folder to store uploaded files
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0777, true); // Create the folder if it doesn't exist
+    }
+
+    $servicesImagesPath = '';
+    if (isset($_FILES['servicesImagesPath']) && $_FILES['servicesImagesPath']['error'] === UPLOAD_ERR_OK) {
+        $fileName = basename($_FILES['servicesImagesPath']['name']);
+        $targetFilePath = $uploadDir . $fileName;
+
+        // Move the uploaded file to the target directory
+        if (move_uploaded_file($_FILES['servicesImagesPath']['tmp_name'], $targetFilePath)) {
+            $servicesImagesPath = $targetFilePath; // Save the path for database insertion
+        } else {
+            echo "Error uploading the file.";
+        }
     }
 
     // Insert data into 'service' table

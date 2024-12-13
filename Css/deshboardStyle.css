@@ -1,0 +1,151 @@
+#customer {
+  max-width: 20%;
+}
+
+#worker {
+  max-width: 20%;
+}
+
+#requestedWorkers {
+  max-width: 20%;
+}
+
+#services {
+  max-width: 20%;
+}
+
+#pendingRequests {
+  max-width: 20%;
+}
+
+@media (max-width: 768px) {
+  .row {
+    display: inline-block;
+    margin-left: 17px;
+  }
+
+  #customer {
+    max-width: 100%; /* Make it span the full width on smaller screens */
+    margin-bottom: 1rem; /* Add spacing between cards */
+  }
+
+  
+  #worker {
+    max-width: 100%; /* Make it span the full width on smaller screens */
+    margin-bottom: 1rem; /* Add spacing between cards */
+  }
+
+  
+  #requestedWorkers {
+    max-width: 100%; /* Make it span the full width on smaller screens */
+    margin-bottom: 1rem; /* Add spacing between cards */
+  }
+
+  
+  #services {
+    max-width: 100%; /* Make it span the full width on smaller screens */
+    margin-bottom: 1rem; /* Add spacing between cards */
+  }
+
+  
+  #pendingRequests {
+    max-width: 100%; /* Make it span the full width on smaller screens */
+    margin-bottom: 1rem; /* Add spacing between cards */
+  }
+
+  .card {
+    text-align: center; /* Center-align content for better presentation */
+  }
+
+  .card .text-xs {
+    font-size: 18px; /* Adjust font size for smaller screens */
+  }
+
+  .card .col-auto {
+    margin-top: 1rem; /* Add spacing between text and total number */
+  }
+}
+
+.card shadow{
+    width: 740px;
+}
+
+#genderDistributionGraph{
+    margin-top: 475px;
+    margin-left: -770px;
+}
+
+#bookingStatus{
+    margin-top: 475px;
+    margin-left: -305px;
+}
+
+#orderDetails{
+    margin-left: -304px;
+    margin-top: 475px;
+}
+
+#serviceOrderDetails{
+    margin-left: -775px;
+}
+
+#serviceOrderDetails .card {
+    height: 450px;
+    width: 451px;
+    margin-left: 43px;
+}
+
+@media (max-width: 768px) {
+    .charts {
+        flex-direction: column; /* Stack items vertically */
+        padding-right: 10px;
+        padding-left: 10px;
+    }
+
+    #servicesSubServices{
+        display: none;
+    }
+
+    #genderDistributionGraph{
+        margin-left: -55px;
+        margin-top: 0;
+    }
+
+    #bookingStatus{
+        margin-left: -55px;
+        margin-top: 10px;
+    }
+
+    #orderDetails{
+        margin-left: -55px;
+        margin-top: 10px;
+    }
+
+    #serviceOrderDetails{
+        margin-left: -55px;
+        margin-top: 10px;    
+    }
+
+    #serviceOrderDetails .card {
+        height: 450px;
+        width: 390px;
+        margin-left: 43px;
+    }
+
+    .charts .col-xl-12 {
+        max-width: 100%; /* Make the card span the full width */
+    }
+
+    .charts .card {
+        width: 100%; /* Adjust card width to fit smaller screens */
+        height: auto; /* Let the height adjust dynamically */
+    }
+
+    .charts .card-header h6 {
+        font-size: 14px; /* Reduce the font size for smaller screens */
+    }
+
+    .charts .card-body {
+        padding: 10px; /* Adjust padding for smaller screens */
+    }
+}
